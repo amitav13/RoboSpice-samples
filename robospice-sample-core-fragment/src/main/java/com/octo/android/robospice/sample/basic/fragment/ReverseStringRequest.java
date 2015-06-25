@@ -1,14 +1,13 @@
 package com.octo.android.robospice.sample.basic.fragment;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
+import android.net.Uri;
+
+import com.octo.android.robospice.request.SpiceRequest;
 
 import org.apache.commons.io.IOUtils;
 
-import android.net.Uri;
-import android.os.Build;
-
-import com.octo.android.robospice.request.SpiceRequest;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class ReverseStringRequest extends SpiceRequest<String> {
 
@@ -28,10 +27,6 @@ public class ReverseStringRequest extends SpiceRequest<String> {
         uriBuilder.appendQueryParameter("word", word);
 
         String url = uriBuilder.build().toString();
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
-            System.setProperty("http.keepAlive", "false");
-        }
         
         HttpURLConnection urlConnection = (HttpURLConnection) new URL(url)
             .openConnection();
@@ -40,5 +35,4 @@ public class ReverseStringRequest extends SpiceRequest<String> {
 
         return result;
     }
-
 }

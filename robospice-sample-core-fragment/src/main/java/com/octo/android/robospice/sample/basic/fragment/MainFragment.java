@@ -17,7 +17,7 @@ import com.octo.android.robospice.SpiceManager;
 import com.octo.android.robospice.UncachedSpiceService;
 import com.octo.android.robospice.persistence.DurationInMillis;
 import com.octo.android.robospice.persistence.exception.SpiceException;
-import com.octo.android.robospice.request.listener.RequestListener;
+import com.octo.android.robospice.request.listener.PendingRequestListener;
 
 public class MainFragment extends Fragment {
 
@@ -67,7 +67,7 @@ public class MainFragment extends Fragment {
     }
 
     private void initUIComponents() {
-        Button reverseButton = (Button) getView().findViewById(R.id.reverse_button);
+        @SuppressWarnings("ConstantConditions") Button reverseButton = (Button) getView().findViewById(R.id.reverse_button);
         wordField = (EditText) getView().findViewById(R.id.word_field);
         resultTextView = (TextView) getView().findViewById(R.id.result);
         reverseButton.setOnClickListener(new View.OnClickListener() {
@@ -93,11 +93,11 @@ public class MainFragment extends Fragment {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(wordField.getWindowToken(), 0);
 
-        LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.container);
+        @SuppressWarnings("ConstantConditions") LinearLayout linearLayout = (LinearLayout) getView().findViewById(R.id.container);
         linearLayout.requestFocus();
     }
 
-    private final class ReverseStringRequestListener implements RequestListener<String> {
+    private final class ReverseStringRequestListener implements PendingRequestListener<String> {
         @Override
         public void onRequestFailure(SpiceException spiceException) {
             Toast.makeText(getActivity(), "Error: " + spiceException.getMessage(), Toast.LENGTH_SHORT).show();
@@ -108,6 +108,11 @@ public class MainFragment extends Fragment {
         public void onRequestSuccess(String result) {
             MainFragment.this.getActivity().setProgressBarIndeterminateVisibility(false);
             resultTextView.setText(getString(R.string.result_text, result));
+        }
+
+        @Override
+        public void onRequestNotFound() {
+            Toast.makeText(getActivity(), "Request not found", Toast.LENGTH_LONG).show();
         }
     }
 }
